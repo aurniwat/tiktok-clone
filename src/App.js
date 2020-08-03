@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 import Video from './components/Video';
 import db from './firebase';
 
 function App() {
+  const appRef = useRef(null);
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
@@ -14,10 +15,11 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='app__videos'>
+      <div className='app__videos' ref={appRef}>
         {videos.map(
           ({ url, channel, description, song, likes, messages, shares }) => (
             <Video
+              key={url}
               url={url}
               channel={channel}
               description={description}
@@ -25,6 +27,7 @@ function App() {
               likes={likes}
               messages={messages}
               shares={shares}
+              appRef={appRef}
             />
           )
         )}

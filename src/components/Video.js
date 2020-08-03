@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Video.css';
 import VideoFooter from './VideoFooter';
 import VideoSidebar from './VideoSidebar';
@@ -11,9 +11,24 @@ const Video = ({
   likes,
   messages,
   shares,
+  appRef,
 }) => {
   const [playing, setPlaying] = useState(false);
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    appRef.current.addEventListener('scroll', checkVisible);
+
+    return () => appRef.current.removeEventListener('scroll');
+  }, []);
+
+  const checkVisible = () => {
+    const rect = videoRef.current.getBoundingClientRect();
+    const viewHeight = appRef.current.clientHeight;
+    if (!(rect.bottom < 0 || rect.top - viewHeight >= 0)) {
+      videoRef.current.pause();
+    }
+  };
 
   const onVideoPress = () => {
     if (playing) {
